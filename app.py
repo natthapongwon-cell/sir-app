@@ -133,7 +133,19 @@ with tab_real:
 เราใช้เป็นตัวแทนของ **I(t)** (ผู้ติดเชื้อที่ยังแพร่เชื้อ) และใช้ **512 คน** เป็นจำนวนผู้ติดเชื้อสะสมสุดท้าย (≈ R ตอนจบ)
 """
     )
-
+up = st.file_uploader("(ทางเลือก) อัปโหลด CSV ของคุณเอง ต้องมีคอลัมน์ day, infected (เช่น export จาก pomp::bsflu)", type="csv")
+    N_real = sc.BSFLU_N
+    total_cases = sc.BSFLU_TOTAL_CASES
+    day_obs, I_obs = sc.BSFLU_DAY, sc.BSFLU_B
+    if up is not None:
+        df_up = pd.read_csv(up)
+        if {"day", "infected"} <= set(df_up.columns):
+            day_obs, I_obs = df_up["day"].to_numpy(float), df_up["infected"].to_numpy(float)
+            N_real = int(st.number_input("N ของข้อมูลที่อัปโหลด", 10, 100_000_000, N_real))
+            total_cases = int(st.number_input("จำนวนติดเชื้อสะสมทั้งหมด (0 = ไม่ทราบ)", 0, N_real, 0))
+        else:
+            st.error("ไม่พบคอลัมน์ day และ infected ใช้ข้อมูลตัวอย่างแทน")
+    st.caption("ตรวจสอบข้อมูลกับแหล่งอ้างอิง (BMJ 1978 / pomp::bsflu) ก่อนนำไปใส่ในรายงาน")
     st.markdown("#### วิธีประมาณค่า: Nonlinear Least Squares")
     st.latex(r"\min_{\beta,\gamma,I_0}\ \sum_{t}\big(I_{\text{model}}(t;\beta,\gamma,I_0) - I_{\text{obs}}(t)\big)^2")
     use_final = st.checkbox("เพิ่มเงื่อนไขให้ผู้ติดเชื้อสะสมช่วงท้ายใกล้ 512 คน (ข้อมูล 'คนที่หายแล้ว')",

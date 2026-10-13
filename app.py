@@ -133,7 +133,7 @@ with tab_real:
 เราใช้เป็นตัวแทนของ **I(t)** (ผู้ติดเชื้อที่ยังแพร่เชื้อ) และใช้ **512 คน** เป็นจำนวนผู้ติดเชื้อสะสมสุดท้าย (≈ R ตอนจบ)
 """
     )
-up = st.file_uploader("(ทางเลือก) อัปโหลด CSV ของคุณเอง ต้องมีคอลัมน์ day, infected (เช่น export จาก pomp::bsflu)", type="csv")
+    up = st.file_uploader("(ทางเลือก) อัปโหลด CSV ของคุณเอง ต้องมีคอลัมน์ day, infected (เช่น export จาก pomp::bsflu)", type="csv")
     N_real = sc.BSFLU_N
     total_cases = sc.BSFLU_TOTAL_CASES
     day_obs, I_obs = sc.BSFLU_DAY, sc.BSFLU_B
@@ -146,6 +146,7 @@ up = st.file_uploader("(ทางเลือก) อัปโหลด CSV ข�
         else:
             st.error("ไม่พบคอลัมน์ day และ infected ใช้ข้อมูลตัวอย่างแทน")
     st.caption("ตรวจสอบข้อมูลกับแหล่งอ้างอิง (BMJ 1978 / pomp::bsflu) ก่อนนำไปใส่ในรายงาน")
+
     st.markdown("#### วิธีประมาณค่า: Nonlinear Least Squares")
     st.latex(r"\min_{\beta,\gamma,I_0}\ \sum_{t}\big(I_{\text{model}}(t;\beta,\gamma,I_0) - I_{\text{obs}}(t)\big)^2")
     use_final = st.checkbox("เพิ่มเงื่อนไขให้ผู้ติดเชื้อสะสมช่วงท้ายใกล้ 512 คน (ข้อมูล 'คนที่หายแล้ว')",
